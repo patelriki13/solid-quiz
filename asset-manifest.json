@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/solid-quiz/static/css/main.233b3b67.css",
+    "main.js": "/solid-quiz/static/js/main.235569fb.js",
+    "index.html": "/solid-quiz/index.html",
+    "main.233b3b67.css.map": "/solid-quiz/static/css/main.233b3b67.css.map",
+    "main.235569fb.js.map": "/solid-quiz/static/js/main.235569fb.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.233b3b67.css",
+    "static/js/main.235569fb.js"
+  ]
+}
