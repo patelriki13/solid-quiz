@@ -14,6 +14,7 @@ const SolidMatchingGame = () => {
   const [resultSubmitted, setResultSubmitted] = useState(false);
   const [validationError, setValidationError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submissionError, setSubmissionError] = useState(false);
 
   const codeExamples = [
     {
@@ -312,14 +313,16 @@ class Script implements Readable, Executable {
       await submitToGoogleSheets(finalResults);
       
       setResultSubmitted(true);
+      setSubmissionError(false);
       setIsSubmitting(false);
       
     } catch (error) {
       console.error('Error submitting results:', error);
       setIsSubmitting(false);
       
-      // Set submitted to true to show the manual submission option
+      // Set submitted to true but also mark as error to show manual submission
       setResultSubmitted(true);
+      setSubmissionError(true);
     }
   };
 
@@ -364,6 +367,7 @@ class Script implements Readable, Executable {
     setUserName('');
     setValidationError('');
     setIsSubmitting(false);
+    setSubmissionError(false);
   };
 
   if (!gameStarted) {
@@ -492,44 +496,61 @@ class Script implements Readable, Executable {
           
           {resultSubmitted && (
             <div className="mt-4 space-y-4">
-              <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                <h3 className="font-semibold text-blue-800 mb-2">📊 Your Quiz Results:</h3>
-                <div className="bg-white p-3 rounded border text-sm font-mono">
-                  <div><strong>Name:</strong> {userName}</div>
-                  <div><strong>Score:</strong> {score}/{shuffledQuestions.length}</div>
-                  <div><strong>Percentage:</strong> {Math.round((score / shuffledQuestions.length) * 100)}%</div>
-                  <div><strong>Completed:</strong> {new Date().toLocaleString()}</div>
+              {!submissionError ? (
+                <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                  <h3 className="font-semibold text-green-800 mb-2">📊 Your Quiz Results submitted successfully!</h3>
+                  <div className="bg-white p-3 rounded border text-sm font-mono">
+                    <div><strong>Name:</strong> {userName}</div>
+                    <div><strong>Score:</strong> {score}/{shuffledQuestions.length}</div>
+                    <div><strong>Percentage:</strong> {Math.round((score / shuffledQuestions.length) * 100)}%</div>
+                    <div><strong>Completed:</strong> {new Date().toLocaleString()}</div>
+                  </div>
+                  <p className="text-green-700 text-sm mt-3">
+                    ✅ Your results have been successfully recorded. Thank you for taking the SOLID Principles Quiz!
+                  </p>
                 </div>
-              </div>
-              
-              <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                <h3 className="font-semibold text-yellow-800 mb-2">📋 Manual Submission:</h3>
-                <p className="text-yellow-700 text-sm mb-3">
-                  Due to security restrictions, please manually submit your results using the form below:
-                </p>
-                <div className="bg-white p-3 rounded border">
-                  <p className="text-sm font-medium text-gray-700 mb-2">Copy this data and submit via your preferred method:</p>
-                  <textarea 
-                    className="w-full p-2 border rounded text-xs font-mono bg-gray-50"
-                    rows="4"
-                    readOnly
-                    value={`Name: ${userName}
+              ) : (
+                <div className="space-y-4">
+                  <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                    <h3 className="font-semibold text-blue-800 mb-2">📊 Your Quiz Results:</h3>
+                    <div className="bg-white p-3 rounded border text-sm font-mono">
+                      <div><strong>Name:</strong> {userName}</div>
+                      <div><strong>Score:</strong> {score}/{shuffledQuestions.length}</div>
+                      <div><strong>Percentage:</strong> {Math.round((score / shuffledQuestions.length) * 100)}%</div>
+                      <div><strong>Completed:</strong> {new Date().toLocaleString()}</div>
+                    </div>
+                  </div>
+                  
+                  <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                    <h3 className="font-semibold text-yellow-800 mb-2">📋 Manual Submission:</h3>
+                    <p className="text-yellow-700 text-sm mb-3">
+                      Due to security restrictions, please manually submit your results using the form below:
+                    </p>
+                    <div className="bg-white p-3 rounded border">
+                      <p className="text-sm font-medium text-gray-700 mb-2">Copy this data and submit via your preferred method:</p>
+                      <textarea 
+                        className="w-full p-2 border rounded text-xs font-mono bg-gray-50"
+                        rows="4"
+                        readOnly
+                        value={`Name: ${userName}
 Score: ${score}/${shuffledQuestions.length}
 Percentage: ${Math.round((score / shuffledQuestions.length) * 100)}%
 Completed: ${new Date().toLocaleString()}`}
-                  />
-                  <button 
-                    onClick={() => {
-                      const textArea = document.querySelector('textarea');
-                      textArea.select();
-                      document.execCommand('copy');
-                    }}
-                    className="mt-2 px-3 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700"
-                  >
-                    Copy to Clipboard
-                  </button>
+                      />
+                      <button 
+                        onClick={() => {
+                          const textArea = document.querySelector('textarea');
+                          textArea.select();
+                          document.execCommand('copy');
+                        }}
+                        className="mt-2 px-3 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700"
+                      >
+                        Copy to Clipboard
+                      </button>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           )}
         </div>
