@@ -2,7 +2,7 @@
   "name": "solid-principles-quiz",
   "version": "1.0.0",
   "description": "Interactive quiz to test knowledge of SOLID design principles",
-  "homepage": "https://patelriki13.github.io/solid-quiz",
+  "homepage": "https://patelriki13.github.io/solid-quiz/build",
   "main": "index.js",
   "scripts": {
     "start": "react-scripts start",
